@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+myvenv/
+
+# ML model files (too big)
+*.h5
+*.keras
+*.pkl
+*.zip
+
+# Keras cache
+.keras/
+
+# OS
+.DS_Store
+Thumbs.db
