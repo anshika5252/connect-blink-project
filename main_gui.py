@@ -9,6 +9,7 @@ import threading
 from datetime import datetime
 import time
 import os
+import pyttsx3
 
 class AuraUnifiedHUD:
     
@@ -25,6 +26,10 @@ class AuraUnifiedHUD:
         self.root.configure(bg="#EB7676")
         self.root.attributes('-fullscreen', True)
         self.root.bind("<Escape>", lambda e: self.root.attributes("-fullscreen", False)) # Press Esc to exit
+        # Initialize Voice Engine
+        self.engine = pyttsx3.init()
+        # Optional: Slow down the speed for better clarity
+        self.engine.setProperty('rate', 150)
 
         # --- DATA & STATE ---
         self.medications = [] 
@@ -57,7 +62,7 @@ class AuraUnifiedHUD:
                     "ENTERTAINMENT": ["TV", "Music", "News"],
                     "URGENT": ["EMERGENCY ALARM"]
                 },
-                "labels": ["AURA OS", "LANGUAGE", "MEDICINE TRACKER", "CAREGIVER PANEL", "MED NAME:", "TIME:", "ADD MEDICINE"],
+                "labels": ["CONNECT OS", "LANGUAGE", "MEDICINE TRACKER", "CAREGIVER PANEL", "MED NAME:", "TIME:", "ADD MEDICINE"],
                 "nurse_alert": "NURSE CALLED!"
             },
             "Hindi": {
@@ -245,9 +250,11 @@ class AuraUnifiedHUD:
         if not self.in_sub_menu:
             self.in_sub_menu = True; self.current_item_idx = 0
         else:
-            selected = ld["items"][cat][self.current_item_idx]
-            messagebox.showinfo("OS", f"Action: {selected}")
-            self.in_sub_menu = False
+           selected = ld["items"][cat][self.current_item_idx]
+            # Voiceover instead of popup to prevent UI freezing
+           self.engine.say(f"Requesting {selected}")
+           self.engine.runAndWait()
+           self.in_sub_menu = False
         self.refresh_ui()
 
     def check_alarms(self):
